@@ -1,41 +1,19 @@
-#
-# Copyright (C) 2021 The TWRP Open Source Project
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
+# Device Path
 DEVICE_PATH := device/xiaomi/sea
 
-# Building with minimal manifest
-ALLOW_MISSING_DEPENDENCIES := true
-
-# Arch
+# Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-2a-dotprod
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := cortex-a76
-
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-2a
 TARGET_2ND_CPU_ABI := armeabi-v7a
-TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a55
 
-# Assert
+# OTA Assert
 TARGET_OTA_ASSERT_DEVICE := sea,ocean
 
-# A/B
+# A/B Partitions Support
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += \
     boot \
@@ -47,72 +25,62 @@ AB_OTA_PARTITIONS += \
     vbmeta \
     vbmeta_system \
     vbmeta_vendor
-    
-# Kernel
+
+# Kernel Configuration
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_BOOTIMG_HEADER_VERSION := 2
+BOARD_KERNEL_IMAGE_NAME := Image.gz
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_RAMDISK_OFFSET := 0x07c08000
 BOARD_KERNEL_TAGS_OFFSET := 0x0bc08000
-BOARD_DTB_OFFSET := 0x0bc08000
+BOARD_RAMDISK_OFFSET := 0x07c08000
 BOARD_KERNEL_OFFSET := 0x00008000
+BOARD_DTB_OFFSET := 0x0bc08000
 
-# Prebuilts
+# Prebuilt Kernel and DTBs
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb
 TARGET_PREBUILT_DTBO := $(DEVICE_PATH)/prebuilt/dtbo.img
 
-# Args
+# mkbootimg Args
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
-BOARD_KERNEL_IMAGE_NAME := Image.gz
 
-# Platform
+# Platform Info
 TARGET_BOARD_PLATFORM := mt6781
 
-# File systems
+# Filesystems
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := erofs
-BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
+BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_COPY_OUT_VENDOR := vendor
 
-# Partitions
+# Partition Sizes
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608
 BOARD_USES_METADATA_PARTITION := true
 
-# Dynamic partitions
+# Dynamic Partitions
 BOARD_SUPER_PARTITION_SIZE := 7516192768
 BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 7511998464
 
-# Android Verified Boot (AVB)
+# AVB (Android Verified Boot)
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --set_hashtree_disabled_flag
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 BOARD_AVB_VBMETA_SYSTEM := system product
-BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
-BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
-BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
 BOARD_AVB_VBMETA_VENDOR := vendor
-BOARD_AVB_VBMETA_VENDOR_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
-BOARD_AVB_VBMETA_VENDOR_ALGORITHM := SHA256_RSA2048
-BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_VBMETA_VENDOR_ROLLBACK_INDEX_LOCATION := 2
-BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA2048
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := mt6781
@@ -121,24 +89,18 @@ TARGET_NO_BOOTLOADER := true
 # Display
 TARGET_SCREEN_DENSITY := 392
 
-# Recovery
+# Recovery Settings
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_HAS_NO_RECOVERY_PARTITION := true
+TW_EXCLUDE_APEX := true
 
-BOARD_SUPPRESS_SECURE_ERASE := true
+# Brightness (commented to avoid UI crash; enable only if you confirm proper brightness range)
+# TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
+# TW_DEFAULT_BRIGHTNESS := 800
+# TW_MAX_BRIGHTNESS := 1200
 
-# Security patch level
-PLATFORM_SECURITY_PATCH := 2127-12-31
-VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
-
-# Hack: prevent anti rollback
-PLATFORM_SECURITY_PATCH := 2099-12-31
-VENDOR_SECURITY_PATCH := 2099-12-31
-PLATFORM_VERSION := 99.87.36
-PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
-
-# TWRP Configuration
+# TWRP Features
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
@@ -148,32 +110,28 @@ TW_DEVICE_VERSION := raphakkj4
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 TARGET_USES_MKE2FS := true
-BOARD_HAS_NO_SELECT_BUTTON := true
 TW_INCLUDE_FASTBOOTD := true
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_LIBRESETPROP := true
 TW_EXCLUDE_TWRPAPP := true
 TW_BACKUP_EXCLUSIONS := /data/fonts
-
-# StatusBar
 TW_STATUS_ICONS_ALIGN := center
 TW_CUSTOM_CPU_POS := "300"
 TW_CUSTOM_CLOCK_POS := "70"
 TW_CUSTOM_BATTERY_POS := "790"
-
-# Device
-TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_DEFAULT_BRIGHTNESS := 800
-TW_MAX_BRIGHTNESS := 1200
-TW_FRAMERATE := 90
-TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-RECOVERY_SDCARD_ON_DATA := true
-TW_HAS_NO_RECOVERY_PARTITION := true
-TW_EXCLUDE_APEX := true
 
-# Crypto
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
-TW_INCLUDE_FBE_METADATA_DECRYPT := true
+# Secure Erase
+BOARD_SUPPRESS_SECURE_ERASE := true
+
+# Anti-Rollback Bypass (spoof security patch level)
+PLATFORM_SECURITY_PATCH := 2099-12-31
+VENDOR_SECURITY_PATCH := 2099-12-31
+PLATFORM_VERSION := 99.87.36
+PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
+
+# CRYPTO (DISABLED for now to prevent bootloop on FBE v2)
+# TW_INCLUDE_CRYPTO := true
+# TW_INCLUDE_CRYPTO_FBE := true
+# TW_INCLUDE_FBE_METADATA_DECRYPT := true
+
